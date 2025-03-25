@@ -14,7 +14,7 @@ const images = generateImagePaths('photo', 0, 100);
 
 // 비디오 경로 배열
 const videos = [
-    { page: 5, path: "videos/sample.mp4" } // 5번 페이지에 동영상 삽입
+    { page: 5, path: "videos/viewmovie.mp4" } // 5번 페이지에 동영상 삽입
 ];
 
 let currentPage = 0;
