@@ -12,6 +12,11 @@ function generateImagePaths(prefix, start, end, extension = 'jpg') {
 // 이미지 경로 배열 생성 (photo000.jpg부터 photo100.jpg까지)
 const images = generateImagePaths('photo', 0, 100);
 
+// 비디오 경로 배열
+const videos = [
+    { page: 5, path: "videos/sample.mp4" } // 5번 페이지에 동영상 삽입
+];
+
 let currentPage = 0;
 const leftPage = document.getElementById('leftPage');
 const rightPage = document.getElementById('rightPage');
@@ -20,16 +25,45 @@ const rightImage = document.getElementById('rightImage');
 const pageCounter = document.getElementById('pageCounter');
 
 function updatePages() {
-    // PC 모드: 2페이지씩 보기
+    // 이미지 초기화
+    leftImage.style.display = 'block';
+    rightImage.style.display = 'block';
+    leftVideo.style.display = 'none';
+    rightVideo.style.display = 'none';
+
+    // PC 모드
     if (window.innerWidth > 768) {
+        // 동영상 체크
+        videos.forEach(video => {
+            if(currentPage === video.page) {
+                leftImage.style.display = 'none';
+                leftVideo.src = video.path;
+                leftVideo.style.display = 'block';
+                leftVideo.play();
+            }
+            if(currentPage+1 === video.page) {
+                rightImage.style.display = 'none';
+                rightVideo.src = video.path;
+                rightVideo.style.display = 'block';
+                rightVideo.play();
+            }
+        });
+
         leftImage.src = images[currentPage];
         rightImage.src = images[currentPage + 1] || '';
         pageCounter.textContent = `${currentPage + 1}-${currentPage + 2} / ${images.length}`;
     }
-    // 모바일 모드: 1페이지씩 보기
+    // 모바일 모드
     else {
+        videos.forEach(video => {
+            if(currentPage === video.page) {
+                leftImage.style.display = 'none';
+                leftVideo.src = video.path;
+                leftVideo.style.display = 'block';
+                leftVideo.play();
+            }
+        });
         leftImage.src = images[currentPage];
-        rightImage.src = '';
         pageCounter.textContent = `${currentPage + 1} / ${images.length}`;
     }
 }
@@ -42,12 +76,12 @@ function pcPageNavigation(event) {
         const width = rect.width;
 
         // 왼쪽 페이지 클릭 시 이전 페이지로
-        if (event.currentTarget.id === 'leftPage' && x < width / 2 && currentPage > 0) {
+        if (event.currentTarget.id === 'leftPage' && currentPage > 0) {
             currentPage -= 2;
             updatePages();
         }
         // 오른쪽 페이지 클릭 시 다음 페이지로
-        else if (event.currentTarget.id === 'rightPage' && x > width / 2 && currentPage < images.length - 2) {
+        else if (event.currentTarget.id === 'rightPage' && currentPage < images.length - 2) {
             currentPage += 2;
             updatePages();
         }
